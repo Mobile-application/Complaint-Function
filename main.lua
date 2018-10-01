@@ -1,3 +1,8 @@
-local composer = require('composer')
 
-composer.gotoScene( "complaintChoice" , { effect="fade", time=500 })
+local composer = require( "composer" )
+
+
+composer.gotoScene( "FirstScene" , { effect="fade", time=500 })
+
+
+
