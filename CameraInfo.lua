@@ -1,122 +1,118 @@
-composer = require( "composer" )
+-----------------------------------------------------------------------------------------
+--
+-- main.lua
+--
+-----------------------------------------------------------------------------------------
+
+local composer = require( "composer" )
  
 local scene = composer.newScene()
+local widget = require( "widget" )
  
+--sending user back to the Home Screen 
 local function Home ()	
 composer.gotoScene("FirstScene",{effect = "slideLeft", time = 500})
 
+end 
+
+
+--sending user back to the previous screen
+local function back ()	
+composer.gotoScene("Security",{effect = "slideRight", time = 500})
+
+end 
+ -- ScrollView listener
+local function scrollListener( event )
+ 
+    local phase = event.phase
+    local direction = event.direction
+	
+	-- If the scrollview has reached it's scroll limit.
+	if event.limitReached then
+		if "up"== direction then
+			print("Reached Top Limit")
+		elseif "down" == direction then
+			print("Reached Bottom Limit")
+		end
+	end
+	
+	return true
 end
-
-
-
---Adding Welcome message
---local function header
---display.newText("Welcome",display.contentCenterX,display.contentCenterY, "Comic Sans MS", 50)
---end
---header()
-
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
  
-local widget = require ("widget")
-
-
-local function complaint ()	
-	composer.gotoScene("Complaint",{effect = "slideLeft", time = 500})
-end
-
-
-
-
-local function hyperLink()
-  system.openURL("https://report.acorn.gov.au")
-end
+ 
+ 
+ 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
- 
+ local bg
 -- create()
 function scene:create( event )
  
     local sceneGroup = self.view
+	bg=display.newRect(display.contentCenterX,display.contentCenterY,display.contentWidth,600, display.contentHeight)
+	bg:setFillColor(1,1,1)
+	sceneGroup:insert(bg)
 	
-	--adding background
-	bg=display.newRect(display.contentCenterX,display.contentCenterY,display.contentWidth,display.contentHeight)
-	bg:setFillColor( 1,1 , 1)
-	
-	bg2=display.newRect(display.contentCenterX, 0,display.contentWidth,65)
+	bg2=display.newRect(display.contentCenterX, 0,display.contentWidth,90)
 	bg2:setFillColor(0.823529 ,0.411765 ,0.117647)
 	sceneGroup:insert(bg)
 	sceneGroup:insert(bg2)
+	--title of the scene LR2
+	heading = [[Camera Privacy ]]
+	head = display.newText(heading, display.contentCenterX*1.00,display.contentCenterY*0.00,"Arial",23)
+	sceneGroup:insert(head)
 	
+	--home icon to send user to the home screen
 	HomeImage = display.newImage("HomeIcon.png", 280, -7 )
 	sceneGroup:insert(HomeImage)
 	HomeImage:addEventListener("tap", Home)
 	
+	--sending user back to the previous screeen icon
+	BackImage = display.newImage("back.png", 30, -7 )
+	sceneGroup:insert(BackImage)
+	BackImage:addEventListener("tap", back)
 	
-	backImage = display.newImage("back.png", 30, -7 )
-	--backImage:translate(140,450)
-	sceneGroup:insert(backImage)
-	backImage:addEventListener("tap", complaint)
-	
-	head = display.newText("Complaint", display.contentCenterX*0.90,display.contentCenterY*0.05,"Arial",25)
-	head:setFillColor(1,1,1)
-	sceneGroup:insert(head)
-	
-	-- Path for the file to read
-local path = system.pathForFile( "file2.txt", system.ResourceDirectory )
- 
--- Open the file handle
-local file, errorString = io.open( path, "r" )
-if not file then
-		-- Error occurred; output the cause
-		print( "File error: " .. errorString )
-	else
-		-- Output lines
-		for line in file:lines() do
-		
-			print( line )
-			
-			local surveyText = {
-			   text =  line,
-	           x = display.contentCenterX,
-			   y = display.contentCenterX,
-			   fontSize = native.SystemFont,
-			   width = 280,
-			   height = 220,
-			   align = "left"
-			}
-			local textBox = display.newText( surveyText)
-			textBox:setFillColor(0,0,0)
-			sceneGroup:insert(textBox)
-		end
-		-- Close the file handle
-		io.close( file )
-	end
+
 
 	
-	local surveyLink = widget.newButton(
-	{
-		id = "link",
-		label = "Click here to complain",
-		onEvent = myeventListener,
-		emboss = false,
-		x = display.contentCenterX,
-		y = 300,
-		shape = "roundedRect",
-		fillColor = { default = { 1, 0.7, 0.5}, over = { 1, 0.7, 0.5} }
-	}
+	-- Create the widget for scroll view
+	local scrollView = widget.newScrollView(
+		{
+			top = 70,
+			left = 0,
+			width = display.contentWidth,
+			height = display.contentHeight,
+			topPadding = 145,
+			bottomPadding = 0,
+			horizontalScrollDisabled = true,
+			verticalScrollDisabled = false,
+			listener = scrollListener,
+		}
 	)
-	sceneGroup:insert(surveyLink)
-	surveyLink:addEventListener ("tap", hyperLink)
+	sceneGroup:insert(scrollView)
 	
-
-	--Adding Timer in this app which display how long a user is seing the app
+	local text = [[
+	To know which apps are using your Camera:
 	
-	--sceneGroup:insert(Timer)
+	For iOS users,
+	Settings > Privacy > Camera > Reset Disable/Enable for applications.
 	
+	For Android users,
+	Settings > Search For App permissions > Camera > Reset Disable/Enable for applications.
+	
+	
+	
+]]
+local text = display.newText(text,0,0,270,0,"Helvetica", 14)
+text:setTextColor(0)
+text.x = display.contentCenterX
+scrollView:insert(text)
+	-- Code here runs when the scene is first created but has not yet appeared on screen
  
 end
  
@@ -126,13 +122,13 @@ function scene:show( event )
  
     local sceneGroup = self.view
     local phase = event.phase
- 
+	
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
+	
     end
 end
  

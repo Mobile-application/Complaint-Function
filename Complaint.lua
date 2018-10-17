@@ -12,13 +12,13 @@ composer.gotoScene("FirstScene",{effect = "slideLeft", time = 500})
 end
 
 --adding a button which brings user to complaint page
-local function complaintINFO()	
-composer.gotoScene("complaintINFO1",{effect = "slideLeft", time = 500})
+local function complaint_info()	
+composer.gotoScene("complaint_info",{effect = "slideLeft", time = 500})
 end
 
 --adding a button which brings user to complaint page
-local function complaintUNKNOWN()	
-composer.gotoScene("complaintINFO2",{effect = "slideLeft", time = 500})
+local function complaint_unknown()	
+composer.gotoScene("complaint_unknown",{effect = "slideLeft", time = 500})
 end
 
 
@@ -30,10 +30,10 @@ function scene:create( event )
     local sceneGroup = self.view
 	
 	--showing a backgroynd
-	bg=display.newRect(display.contentCenterX,display.contentCenterY,display.contentWidth,display.contentHeight)
+	bg=display.newRect(display.contentCenterX,display.contentCenterY,display.contentWidth,600,display.contentHeight)
 	bg:setFillColor( 1,1 , 1)
 	
-	bg2=display.newRect(display.contentCenterX, 0,display.contentWidth,65)
+	bg2=display.newRect(display.contentCenterX, 0,display.contentWidth,90)
 	bg2:setFillColor(0.823529 ,0.411765 ,0.117647)
 	sceneGroup:insert(bg)
 	sceneGroup:insert(bg2)
@@ -49,6 +49,7 @@ function scene:create( event )
 	sceneGroup:insert(head)
 	
 	--creating buttons for complaint 
+	--creating button for known breaches
 	breaches = widget.newButton(
 	{
 		id = "breach",
@@ -65,7 +66,9 @@ function scene:create( event )
 	}
 	)
 	sceneGroup:insert(breaches)
-	breaches:addEventListener ("touch", complaintINFO)
+	breaches:addEventListener ("touch", complaint_info)
+	
+	--creating button for unknown breaches
 	UnknownBreaches = widget.newButton(
 	{
 		id = "unknownBreaches",
@@ -82,14 +85,9 @@ function scene:create( event )
 	}
 	)
 	sceneGroup:insert(UnknownBreaches)
-	UnknownBreaches:addEventListener ("touch", complaintUNKNOWN)	
+	UnknownBreaches:addEventListener ("touch", complaint_unknown)	
+	
 end 
-
-
-
-
-
-
 
 
 -- show()
